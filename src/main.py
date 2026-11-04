@@ -1,22 +1,29 @@
-"""Run the phase 1 Phinuro demostration."""
+"""Demonstrate a dense layer in Phinuro."""
 
-from src.neuron import sigmoid, weighted_sum
+from src.layer import DenseLayer
 
 def main()-> None:
-    x1 = 0.5
-    x2 = 0.8
+    weights = [
+        [0.4,-0.2],
+        [0.1,0.3],
+        [-0.5,0.7]
+    ]
 
-    w1 = 0.4
-    w2 = -0.2
-    bias = 0.1
+    biases = [0.1,-0.1,0.2]
 
-    z = weighted_sum(x1,x2,w1,w2,bias)
-    output = sigmoid(z)
+    layer = DenseLayer(
+        weights=weights,
+        biases=biases,
+    )
 
-    print("Phinuro — Phase 1")
-    print(f"Weighted sum (z): {z:.4f}")
-    print(f"Sigmoid output:   {output:.4f}")
+    inputs = [0.5,0.8]
 
+    outputs = layer.forward(inputs)
+
+    print("Phinuro — Phase 2")
+    print(f"Input:   {inputs}")
+    print(f"Neurons: {layer.neuron_count}")
+    print(f"Output:  {[round(value, 4) for value in outputs]}")
 
 if __name__ == "__main__":
     main()

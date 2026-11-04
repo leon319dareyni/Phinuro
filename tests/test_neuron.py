@@ -1,40 +1,55 @@
 import unittest
 
-from src.neuron import neuron, sigmoid, weighted_sum
+from src.layer import DenseLayer
 
 
-class TestSigmoid(unittest.TestCase):
+class TestDenseLayer(unittest.TestCase):
 
-    def test_sigmoid_at_zero(self):
-        self.assertAlmostEqual(sigmoid(0.0), 0.5)
-
-    def test_sigmoid_at_positive_value(self):
-        result = sigmoid(2.0)
-
-        self.assertGreater(result, 0.0)
-        self.assertLess(result, 1.0)
-
-
-class TestWeightedSum(unittest.TestCase):
-
-    def test_weighted_sum(self):
-        result = weighted_sum(
-            0.5, 0.8, 0.4, -0.2, 0.1
+    def setUp(self):
+        self.layer = DenseLayer(
+            weights=[
+                [0.4, -0.2],
+                [0.1, 0.3],
+                [-0.5, 0.7],
+            ],
+            biases=[0.1, -0.1, 0.2],
         )
 
-        self.assertAlmostEqual(result, 0.14)
+    def test_output_count(self):
+        outputs = self.layer.forward([0.5,0.8])
+
+        self.assertEqual(len(outputs), 3)
+
+    def test_expected_outputs(self):
+        outputs = self.layer.forward([0.5,0.8])
+
+        expected = [
+            0.5349429452,
+            0.5473576181,
+            0.6248064745,
+        ]
+
+        for actual, target in zip(outputs,expected):
+            self.assertAlmostEqual(actual,target,places=5)
 
 
-class TestNeuron(unittest.TestCase):
+    def test_wrong_input_size(self):
+        with self.assertRaises(ValueError):
+            self.layer.forward([0.5])
 
-    def test_neuron_output(self):
-        result = neuron(
-            0.5, 0.8, 0.4, -0.2, 0.1
-        )
+    def test_mismatched_bias_count(self):
+        with self.assertRaises(ValueError):
+            DenseLayer(
+                weights=[[0.2, 0.3], [0.4, 0.5]],
+                biases=[0.1],
+            )
 
-        self.assertAlmostEqual(
-            result, 0.5349429451582145
-        )
+    def test_inconsistent_weight_dimensions(self):
+        with self.assertRaises(ValueError):
+            DenseLayer(
+                weights=[[0.2, 0.3], [0.4]],
+                biases=[0.1, 0.2],
+            )
 
 
 if __name__ == "__main__":

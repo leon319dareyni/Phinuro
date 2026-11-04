@@ -1,48 +1,41 @@
 # Phinuro 🧠
+
 ### Building Neural Networks From Scratch
 
-Phinuro is an educational project dedicated to understanding artificial intelligence and neural networks by implementing their fundamental components from scratch.
+Phinuro is an educational project focused on understanding how neural networks work by implementing their fundamental components from the ground up.
 
-The goal is to move beyond simply using machine learning frameworks and understand the mathematics, algorithms, and computational processes that make neural networks work.
+Rather than relying on machine-learning frameworks to perform the core computations, Phinuro starts with simple Python implementations and builds toward a small neural-network library. Each phase introduces new concepts alongside the mathematics and tests needed to verify them.
 
-Instead of relying on frameworks such as PyTorch or TensorFlow, Phinuro begins with basic Python implementations and gradually evolves into a neural network library.
-
-> **Current status:** Phase 1 — Single Artificial Neuron
+> **Current status:** Phase 2 — Multiple Neurons and Dense Layers
 
 ---
 
-## 🎯 Project Objectives
+## Project objectives
 
-Phinuro aims to provide a practical, mathematical understanding of neural networks through incremental implementation.
+- Understand how artificial neurons process numerical inputs.
+- Implement neural-network components and algorithms in Python.
+- Connect the code to the underlying mathematics.
+- Build forward propagation, loss functions, and backpropagation step by step.
+- Implement parameter optimization without automatic differentiation.
+- Test mathematical correctness and explore model behavior through experiments.
 
-The main objectives are:
-
-- Understand how artificial neurons process information.
-- Implement neural network components using Python.
-- Explore the mathematical foundations of machine learning.
-- Implement forward propagation, loss functions, and backpropagation.
-- Build learning algorithms without automatic differentiation.
-- Visualize training processes and model behavior.
-- Develop a lightweight neural network library for educational purposes.
-
-## 🛠️ Technology Stack
+## Technology stack
 
 | Technology | Purpose |
 |---|---|
-| Python | Core implementation |
-| `math` | Mathematical operations and activation functions |
-| `unittest` | Automated testing |
+| Python 3.10+ | Core implementation |
+| Python `math` module | Mathematical operations and sigmoid activation |
+| Python `unittest` | Automated tests |
+| Git and GitHub | Version control and project hosting |
 
-**Dependencies:** No third-party Python packages are required for Phase 1.
+**Dependencies:** Phinuro currently uses only Python's standard library. NumPy, PyTorch, TensorFlow, and other machine-learning frameworks are not used in the current phases.
 
 ---
 
-# 📚 Development Roadmap
-
-Phinuro is being developed in incremental phases, with each phase introducing new concepts and capabilities.
+# Development roadmap
 
 - [x] **Phase 1 — Single Artificial Neuron**
-- [ ] Phase 2 — Multiple Neurons and Dense Layers
+- [x] **Phase 2 — Multiple Neurons and Dense Layers**
 - [ ] Phase 3 — Loss Functions
 - [ ] Phase 4 — Backpropagation
 - [ ] Phase 5 — Gradient Descent and Optimization
@@ -55,108 +48,154 @@ The roadmap may evolve as the project develops.
 
 ---
 
-# 🧮 Phase 1: Single Artificial Neuron
+# Phase 1 — Single Artificial Neuron
 
-## Overview
+Phase 1 implemented a single neuron with two inputs, two manually assigned weights, a bias, and a sigmoid activation function.
 
-The first phase implements a single artificial neuron with two inputs, two weights, a bias, and a sigmoid activation function.
+The neuron performs a forward pass in two steps.
 
-The neuron performs a forward pass:
-
-1. Receives input values.
-2. Multiplies each input by its corresponding weight.
-3. Adds the weighted values and bias.
-4. Applies the sigmoid activation function.
-5. Returns the resulting output.
-
-At this stage, the parameters are manually assigned. The neuron does not learn from data.
-
-## Mathematical Foundation
-
-### 1. Weighted Sum
-
-The neuron first calculates a weighted sum:
+### 1. Weighted sum
 
 \[
 z = w_1x_1 + w_2x_2 + b
 \]
 
-Where:
+Where \(x_1\) and \(x_2\) are inputs, \(w_1\) and \(w_2\) are their weights, and \(b\) is the bias.
 
-- \(x_1, x_2\): Input features.
-- \(w_1, w_2\): Weights associated with the inputs.
-- \(b\): Bias.
-- \(z\): Weighted sum before activation.
-
-Weights determine how strongly each input contributes to the result, while the bias provides an additional adjustable offset.
-
-### 2. Sigmoid Activation
-
-The weighted sum is passed through the sigmoid function:
+### 2. Sigmoid activation
 
 \[
 \sigma(z) = \frac{1}{1 + e^{-z}}
 \]
 
-The sigmoid function maps every finite real-valued input to a value strictly between zero and one.
+The sigmoid function maps any finite real input to a value strictly between zero and one.
 
-This transformation is useful for understanding nonlinear activation functions and will be important when we later implement binary classification.
-
-### 3. Neuron Output
-
-The complete forward pass is:
+### 3. Neuron output
 
 \[
 \hat{y} = \sigma(w_1x_1 + w_2x_2 + b)
 \]
 
-Here, \(\hat{y}\) represents the neuron's output.
-
-Although sigmoid outputs can be interpreted as probabilities in an appropriately trained binary classification model, this first implementation simply produces an activated numerical output.
+The weights and bias in Phase 1 are supplied manually. The neuron does not learn from data.
 
 ---
 
-## 🧪 Example Calculation
+# Phase 2 — Multiple Neurons and Dense Layers
 
-Consider the following inputs and parameters:
+## Overview
 
-| Parameter | Value |
-|---|---:|
-| \(x_1\) | 0.5 |
-| \(x_2\) | 0.8 |
-| \(w_1\) | 0.4 |
-| \(w_2\) | -0.2 |
-| \(b\) | 0.1 |
+Phase 2 extends the single-neuron implementation into a **dense layer** containing multiple neurons. Every neuron receives the same input vector, but each neuron has its own weight vector and bias.
 
-### Step 1: Calculate the weighted sum
+The current demonstration takes two input features and produces three outputs.
+
+## Mathematical foundation
+
+Let the input vector be:
 
 \[
-z = (0.5)(0.4) + (0.8)(-0.2) + 0.1
+\mathbf{x} =
+\begin{bmatrix}
+0.5 \\
+0.8
+\end{bmatrix}
+\]
+
+The layer has three neurons. Their weights are stored in a matrix:
+
+\[
+W =
+\begin{bmatrix}
+0.4 & -0.2 \\
+0.1 & 0.3 \\
+-0.5 & 0.7
+\end{bmatrix}
+\]
+
+The bias vector is:
+
+\[
+\mathbf{b} =
+\begin{bmatrix}
+0.1 \\
+-0.1 \\
+0.2
+\end{bmatrix}
+\]
+
+The complete layer calculation is:
+
+\[
+\mathbf{z} = W\mathbf{x} + \mathbf{b}
+\]
+
+The dimensions are compatible:
+
+\[
+(3 \times 2)(2 \times 1) + (3 \times 1) = (3 \times 1)
+\]
+
+The layer then applies sigmoid separately to each element:
+
+\[
+\mathbf{a} = \sigma(\mathbf{z})
+\]
+
+Here, \(\sigma\) is applied element-wise. The result is one activated output for each neuron.
+
+## Example calculation
+
+Using the inputs, weights, and biases above:
+
+\[
+z_1 = (0.4)(0.5) + (-0.2)(0.8) + 0.1 = 0.14
 \]
 
 \[
-z = 0.2 - 0.16 + 0.1
+z_2 = (0.1)(0.5) + (0.3)(0.8) - 0.1 = 0.19
 \]
 
 \[
-z = 0.14
+z_3 = (-0.5)(0.5) + (0.7)(0.8) + 0.2 = 0.51
 \]
 
-### Step 2: Apply the sigmoid function
+Therefore:
 
 \[
-\hat{y} = \frac{1}{1 + e^{-0.14}}
+\mathbf{z} =
+\begin{bmatrix}
+0.14 \\
+0.19 \\
+0.51
+\end{bmatrix}
+\qquad
+\mathbf{a} \approx
+\begin{bmatrix}
+0.5349 \\
+0.5474 \\
+0.6248
+\end{bmatrix}
 \]
 
-\[
-\boxed{\hat{y} \approx 0.5349}
-\]
+The layer transforms **two input values into three output values**.
 
-The neuron produces an output of approximately **0.5349**.
+## Implementation details
+
+The `DenseLayer` class in `src/layer.py` stores:
+
+- `weights`: one weight vector per neuron.
+- `biases`: one bias per neuron.
+- `input_size`: the number of values expected by each neuron.
+- `neuron_count`: the number of neurons in the layer.
+
+Its `forward()` method validates the input size, computes the weighted sum for every neuron, adds the corresponding bias, applies sigmoid, and returns the list of outputs.
+
+The implementation uses Python lists and loops so the calculations remain visible. Matrix-based operations with NumPy can be introduced later as a deliberate implementation step.
+
+**Important:** Phase 2 still does not train the network. Weights and biases are manually supplied. Loss functions, gradient calculation, backpropagation, and parameter updates are future phases.
 
 ---
 
-# 📁 Project Structure
+# Project structure
 
 ```text
 Phinuro/
@@ -167,60 +206,65 @@ Phinuro/
 ├── src/
 │   ├── __init__.py
 │   ├── neuron.py
+│   ├── layer.py
 │   └── main.py
 │
 └── tests/
     ├── __init__.py
-    └── test_neuron.py
+    ├── test_neuron.py
+    └── test_layer.py
 ```
 
-### Directory Responsibilities
-
-| File | Description |
+| File | Responsibility |
 |---|---|
-| `README.md` | Project documentation |
-| `.gitignore` | Excludes generated files and virtual environments from version control |
-| `src/__init__.py` | Defines the source directory as a Python package |
-| `src/neuron.py` | Implements the neuron and its mathematical operations |
-| `src/main.py` | Runs the Phase 1 demonstration |
-| `tests/test_neuron.py` | Contains automated tests for the implementation |
+| `README.md` | Project documentation, mathematics, and setup instructions |
+| `.gitignore` | Excludes generated files and local environments from version control |
+| `src/__init__.py` | Marks `src` as a Python package |
+| `src/neuron.py` | Implements the sigmoid function, weighted sum, and single-neuron forward pass |
+| `src/layer.py` | Implements a dense layer containing multiple neurons |
+| `src/main.py` | Runs the current phase demonstration |
+| `tests/test_neuron.py` | Tests the Phase 1 neuron calculations |
+| `tests/test_layer.py` | Tests dense-layer outputs and input-dimension validation |
 
 ---
 
-# 🚀 Installation and Usage
+# Installation and usage
 
 ## Requirements
 
 - Python 3.10 or newer recommended.
-- Git, if you want to clone and contribute to the repository.
+- Git, if cloning the repository.
 
-No external Python packages are needed for Phase 1.
+No third-party Python packages are required for the current phases.
 
-## 1. Clone the Repository
+## 1. Clone the repository
 
-Replace the placeholder with your actual GitHub repository URL.
+Replace the placeholder with the URL of your GitHub repository.
 
 ```bash
-git clone https://github.com/leon319dareyni/Phinuro.git
+git clone https://github.com/leon319dareyni/Phinuro
 cd Phinuro
 ```
 
-## 2. Create a Virtual Environment
+## 2. Create and activate a virtual environment
+
+On Linux and macOS:
 
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
 ```
 
-On Windows, activate the environment using:
+On Windows PowerShell:
 
 ```powershell
+py -m venv .venv
 .venv\Scripts\Activate.ps1
 ```
 
-## 3. Run the Neuron
+## 3. Run the demonstration
 
-From the project root:
+Run this command from the repository root:
 
 ```bash
 python -m src.main
@@ -229,72 +273,35 @@ python -m src.main
 Expected output:
 
 ```text
-NeuralCore — Phase 1
-Weighted sum (z): 0.1400
-Sigmoid output:   0.5349
+Phinuro — Phase 2
+Input:   [0.5, 0.8]
+Neurons: 3
+Output:  [0.5349, 0.5474, 0.6248]
 ```
 
-## 4. Run the Tests
+## 4. Run the test suite
 
 ```bash
 python -m unittest discover -s tests -v
 ```
 
-The test suite checks the expected behavior of the mathematical operations and neuron output.
+The tests check the single-neuron calculations, dense-layer output values, output count, and handling of invalid input dimensions.
 
 ---
 
-# 🔬 Learning Principles
+# Development principles
 
-Phinuro follows several principles throughout its development:
-
-**1. Understand before abstracting**
-
-Every major mathematical operation should be understood before being incorporated into a larger component.
-
-**2. Implement before relying on frameworks**
-
-Core algorithms will initially be implemented manually rather than delegated to machine learning frameworks.
-
-**3. Test mathematical correctness**
-
-Implementations should be tested against known results and mathematical properties.
-
-**4. Build incrementally**
-
-Each phase should extend the previous implementation without introducing unnecessary complexity.
-
-**5. Learn through experimentation**
-
-Changing parameters, observing outputs, and investigating unexpected behavior are essential parts of the learning process.
+1. **Understand before abstracting.** Understand the mathematical operation before hiding it behind a larger interface.
+2. **Implement core mechanics manually.** Avoid delegating the central learning algorithms to frameworks while developing the educational foundation.
+3. **Test mathematical correctness.** Compare outputs with known values and test important properties and invalid cases.
+4. **Build incrementally.** Each phase should extend the existing implementation without unnecessary rewrites.
+5. **Experiment and observe.** Change inputs and parameters, predict the result, run the code, and investigate differences.
 
 ---
 
-# 🗺️ Future Direction
+# License
 
-After Phase 1, Phinuro will progress from a single neuron to interconnected layers of neurons.
-
-Future development will introduce:
-
-- Dense layers and matrix-based computation.
-- ReLU, tanh, and additional activation functions.
-- Regression and classification loss functions.
-- Manual gradient calculation.
-- Backpropagation using the chain rule.
-- Gradient descent and other optimization algorithms.
-- Mini-batch training and validation.
-- Training metrics and decision-boundary visualization.
-- Model serialization and reproducible experiments.
-
-The long-term goal is to build a small but understandable neural network library that demonstrates the fundamental mechanics of deep learning.
-
----
-
-# 📜 License
-
-The project is currently intended for educational and experimental purposes.
-
-A formal open-source license can be added when one is selected. Until then, no particular open-source license is implied.
+Phinuro is currently an educational and experimental project. No open-source license has been selected yet; until one is added to the repository, no particular open-source license is implied.
 
 ---
 

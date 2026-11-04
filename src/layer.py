@@ -1,15 +1,16 @@
-"""Dense layer implemention for Phinuro."""
+"""Dense layer implementation for Phinuro."""
 
 from src.neuron import sigmoid
 
+
 class DenseLayer:
-    """A fully connected layer of artifical neurons."""
+    """A fully connected layer of artificial neurons."""
 
     def __init__(
-            self,
-            weights: list[list[float]],
-            biases: list[float],
-    )-> None:
+        self,
+        weights: list[list[float]],
+        biases: list[float],
+    ) -> None:
         if not weights:
             raise ValueError("A layer must contain at least one neuron.")
 
@@ -28,33 +29,29 @@ class DenseLayer:
                 "All neurons in a dense layer must have the same input size."
             )
 
-        self.weightes = weights
+        self.weights = weights
         self.biases = biases
         self.input_size = input_size
         self.neuron_count = len(weights)
 
-    def forward(
-            self,
-            inputs: list[float],
-    )-> list[float]:
+    def forward(self, inputs: list[float]) -> list[float]:
         """Calculate the outputs of every neuron in the layer."""
 
         if len(inputs) != self.input_size:
             raise ValueError(
-                f"Expected {self.input_size} inputs, got {len(inputs)}"
+                f"Expected {self.input_size} inputs, got {len(inputs)}."
             )
 
         outputs = []
 
-        for neuron_weights, bias in zip(self.weightes,self.biases):
+        for neuron_weights, bias in zip(self.weights, self.biases):
             z = sum(
-                weight * value 
-                for weight, value in zip(neuron_weights,self.input_size)
+                weight * value
+                for weight, value in zip(neuron_weights, inputs)
             )
 
-            z += bias 
+            z += bias
 
             outputs.append(sigmoid(z))
 
         return outputs
-    
